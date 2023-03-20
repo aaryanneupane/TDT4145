@@ -4,7 +4,8 @@ con = sqlite3.connect("database.db")
 #Create cursor
 c = con.cursor()
 
-c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES 
+#Jernbanestasjon
+c.execute('''INSERT INTO Jernbanestasjon VALUES 
 ('Trondheim', 5.1),
 ('Steinkjer', 3.6),
 ('Mosjøen', 6.8),
@@ -12,22 +13,35 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
 ('Fauske', 34.0),
 ('Bodø', 4.1),
 ''')
-c.execute('''INSERT OR IGNORE INTO Delstrekning VALUES 
+          
+#Delstrekning
+c.execute('''INSERT INTO Delstrekning VALUES 
 ('TrondStein', 120, 2, 'Trondheim', 'Steinkjer')
 ('SteinMosjø', 280, 1, 'Steinkjer', 'Mosjøen')
 ('MosjøMoIRa', 90, 1, 'Mosjøen', 'MoIRana')
 ('MoIRaFaus', 170, 1, 'MoIRana', 'Fauske')
 ('FausBod', 60, 1, 'Fauske', 'Bodø')
 ''')
-c.execute('''INSERT OR IGNORE INTO Banestrekning VALUES 
-('Nordlandsbanen', 0, 'Trondheim', 'Bodoe', 'TrondStein')
+          
+#Banestrekning, forstår ikke hva DElsNavn kan være her?
+c.execute('''INSERT  INTO Banestrekning VALUES 
+('Nordlandsbanen', 0, 'Trondheim', 'Bodoe', 'NONE')
 ''')
-c.execute('''INSERT OR IGNORE INTO Togrute VALUES 
-('1', 0, 'Trondheim', 'Bodoe', 'Trond_Stein')
+
+#Operatør      
+c.execute('''INSERT  INTO Operatør VALUES 
+('SJ')
+''')
+          
+#Togrute
+c.execute('''INSERT INTO Togrute VALUES 
+('1', 0, 'Nordlandsbanen', 'Bodoe', 'SJ')
 ''')
 
-
-
+#TogruteForekomst
+c.execute('''INSERT INTO TogruteForekomst VALUES 
+('1', 'SJ')
+''')
 
 
         
