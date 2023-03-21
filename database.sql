@@ -1,3 +1,5 @@
+-- Har endret på rekken til de ulike tabellene slik at det vil kjøre, huske ikke ka det hete
+
 CREATE TABLE IF NOT EXISTS Jernbanestasjon (
 	StasjonNavn	VARCHAR(30),
 	moh	FLOAT,
@@ -13,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Delstrekning (
 
 CREATE TABLE IF NOT EXISTS Banestrekning (
 	BaneNavn VARCHAR(30),
-	Fremdriftsenergi INTEGER,
+	Fremdriftsenergi INTEGER, -- 0 for false og 1 for True
 	StartStasjon VARCHAR(30),
 	EndeStasjon VARCHAR(30),
 	-- DelSNavn VARCHAR(30),
@@ -47,8 +49,8 @@ CREATE TABLE IF NOT EXISTS Togrute(
 CREATE TABLE IF NOT EXISTS TogruteForekomst(
 	TogruteForekomstID INTEGER NOT NULL,
 	OperatørNavn VARCHAR(30),
-	Ankomsttid VARCHAR(30),  -- Lagt til ankomsttid
 	Avgangstid 	VARCHAR(30), -- lagt til avgansgstid
+	Ankomsttid VARCHAR(30),  -- Lagt til ankomsttid
 	CONSTRAINT Forekomst_PK PRIMARY KEY (TogruteForekomstID)
 	CONSTRAINT Rute_FK1 FOREIGN KEY (OperatørNavn) REFERENCES Operatør(OperatørNavn)
 		ON UPDATE CASCADE
@@ -58,9 +60,8 @@ CREATE TABLE IF NOT EXISTS TogruteForekomst(
 
 CREATE TABLE IF NOT EXISTS HarDelstrekning(
 	TogruteForekomstID	INTEGER NOT NULL,
-	DelSNavn VARCHAR(30),
-	Ankomsttid VARCHAR(30), -- Endret fra Integer til varchar
-	Avgangstid 	VARCHAR(30), -- Endret fra Integer til varchar
+	DelSNavn VARCHAR(30), 
+	-- Fjernet avgang og ankomsttid, gir ikke mening å ha det for delstrekninger?
 	CONSTRAINT HarDelS_PK PRIMARY KEY (TogruteForekomstID, DelSNavn)
 	CONSTRAINT HarDelS_FK1 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
 		ON UPDATE CASCADE
@@ -73,7 +74,25 @@ CREATE TABLE IF NOT EXISTS HarDelstrekning(
 		ON DELETE CASCADE);
 
 
+CREATE TABLE IF NOT EXISTS Kunde(
+	KundeNr	INTEGER NOT NULL,
+	Navn VARCHAR(30),
+	epost VARCHAR(30),
+	tlf	VARCHAR(10),
+	CONSTRAINT Kunde_PK PRIMARY KEY (KundeNr));
 
+CREATE TABLE IF NOT EXISTS Kundeordre(
+	OrdreNr	INTEGER NOT NULL,
+	Dato VARCHAR(30), -- Endret fra integer til varchar blir på format yyyymmdd
+	Tidspunkt VARCHAR(30), -- Endret fra integer til varchar blir på format HHMM
+	KundeNr	INTEGER NOT NULL,
+	CONSTRAINT KundeO_PK PRIMARY KEY (OrdreNr)
+	CONSTRAINT KundeO_FK1 FOREIGN KEY (KundeNr) REFERENCES Kunde(KundeNr)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE);
+
+
+ -- Bør kanskje legge inn dato her?
 CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
 	DelSNavn VARCHAR(30),
 	BillettID INTEGER NOT NULL,
@@ -151,22 +170,8 @@ CREATE TABLE IF NOT EXISTS Seter(
 		ON DELETE CASCADE);
 
 
-CREATE TABLE IF NOT EXISTS Kundeordre(
-	OrdreNr	INTEGER NOT NULL,
-	Dato INTEGER,
-	Tidspunkt INTEGER,
-	KundeNr	INTEGER NOT NULL,
-	CONSTRAINT KundeO_PK PRIMARY KEY (OrdreNr)
-	CONSTRAINT KundeO_FK1 FOREIGN KEY (KundeNr) REFERENCES Kunde(KundeNr)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE);
 
-CREATE TABLE IF NOT EXISTS Kunde(
-	KundeNr	INTEGER NOT NULL,
-	Navn VARCHAR(30),
-	epost VARCHAR(30),
-	tlf	VARCHAR(10),
-	CONSTRAINT Kunde_PK PRIMARY KEY (KundeNr));
+
 	
 
 

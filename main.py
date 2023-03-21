@@ -33,23 +33,41 @@ c.execute('''INSERT INTO Operatør VALUES
 ('SJ')
 ''')
           
-#Togrute   Kan hende man bør ha tidspunkt her?
+#Togrute  
 c.execute('''INSERT INTO Togrute VALUES 
-('1', 'True', 'Nordlandsbanen', 'SJ', 'Trondheim', 'Bodø')
-('2', 'False', 'Nordlandsbanen', 'SJ', 'MoIRana' , 'Trondheim')
+(1, 'True', 'Nordlandsbanen', 'SJ', 'Trondheim', 'Bodø')
+(2, 'True', 'Nordlandsbanen', 'SJ', 'Trondheim', 'Bodø')
+(3, 'False', 'Nordlandsbanen', 'SJ', 'MoIRana' , 'Trondheim')
 ''')
 
 #TogruteForekomst 
 c.execute('''INSERT INTO TogruteForekomst VALUES 
-('1', 'SJ'  )
-('2', 'SJ', ')
+(1, 'SJ', '0749', '1734')
+(2, 'SJ', '2305', '0905')
+(3, 'SJ', '0811', '1413')
 ''')
 
-#HarDelstrekning
+#HarDelstrekning DENNE ingen ekstra data
 c.execute('''INSERT INTO HarDelstrekning VALUES 
-('1', 'SJ')
+(1, 'SJ')
+(2, 'SJ')
+(3, 'SJ')
 ''')
-        
+
+#Kunde Dummydata
+c.execute('''INSERT INTO Kunde VALUES 
+(1, 'Erlend', 'erlend@gmail.com', '12345667')
+(2, 'Aaryan', 'aaryan@gmail.com', '12345687')
+(3, 'Joachim', 'joachim@gmail.com', '12345678')
+''')
+
+#Kundeordre Dummydata
+c.execute('''INSERT INTO Kundeordre VALUES 
+(1, '20230320', '1712', 1 )
+(2, '20230318', '1832', 2)
+(3, '20230319', '1509', 2)
+''')
+
 c.execute("SELECT * FROM Banestrekning")
 rows = c.fetchall()
 print('All rows from Banestrekning')
