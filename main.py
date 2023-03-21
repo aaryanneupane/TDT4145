@@ -35,9 +35,9 @@ c.execute('''INSERT OR IGNORE INTO Operatør VALUES
           
 #Togrute  
 c.execute('''INSERT OR IGNORE INTO Togrute VALUES 
-(1, 'True', 'Nordlandsbanen', 'SJ', 'Trondheim', 'Bodø'),
-(2, 'True', 'Nordlandsbanen', 'SJ', 'Trondheim', 'Bodø'),
-(3, 'False', 'Nordlandsbanen', 'SJ', 'MoIRana' , 'Trondheim')
+(1, 'True', 'Nordlandsbanen', 'SJ', 'Hverdager', 'Trondheim', 'Bodø'),
+(2, 'True', 'Nordlandsbanen', 'SJ', 'Alle dager', 'Trondheim', 'Bodø'),
+(3, 'False', 'Nordlandsbanen', 'SJ', 'Hverdager', 'MoIRana' , 'Trondheim')
 ''')
 
 #TogruteForekomst 
@@ -45,13 +45,6 @@ c.execute('''INSERT OR IGNORE INTO TogruteForekomst VALUES
 (1, 'SJ', '0749', '1734'),
 (2, 'SJ', '2305', '0905'),
 (3, 'SJ', '0811', '1413')
-''')
-
-#HarDelstrekning DENNE ingen ekstra data
-c.execute('''INSERT OR IGNORE INTO HarDelstrekning VALUES 
-(1, 'SJ'),
-(2, 'SJ'),
-(3, 'SJ')
 ''')
 
 #Kunde Dummydata

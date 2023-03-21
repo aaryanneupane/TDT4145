@@ -1,7 +1,5 @@
--- Har endret på rekken til de ulike tabellene slik at det vil kjøre
--- Mangler fortsatt dato og tid på vært stopp ellers ferdig
--- Forstår ikke hvordan DEl strekning funker
--- Alle endringer er kommentert
+-- Mangler fortsatt tid på vært stopp, må endre hartogruteforekomst 
+-- Mangler Antall sovevogner og sittevogner knyttet til vogn
 
 CREATE TABLE IF NOT EXISTS Jernbanestasjon (
 	StasjonNavn	VARCHAR(30),
@@ -25,14 +23,9 @@ CREATE TABLE IF NOT EXISTS Banestrekning (
 	Fremdriftsenergi INTEGER, -- 0 for false og 1 for True
 	StartStasjon VARCHAR(30),
 	EndeStasjon VARCHAR(30),
-	-- DelSNavn VARCHAR(30),
 	CONSTRAINT Bane_PK PRIMARY KEY (BaneNavn)
 	);
-	-- CONSTRAINT Bane_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
-	-- 	ON UPDATE CASCADE
-	-- 	ON DELETE CASCADE);
-    -- Gir ikke mening å ha med i databasen
-
+	
 
 CREATE TABLE IF NOT EXISTS Operatør(
 	OperatørNavn VARCHAR(30),
@@ -45,6 +38,7 @@ CREATE TABLE IF NOT EXISTS Togrute(
 	Hovedretning VARCHAR(30), -- Endret til 'True'/'False' fremfor 1/0
 	BaneNavn VARCHAR(30),
 	OperatørNavn VARCHAR(30),
+	Ukedager VARCHAR(30), --Lagt til Ukedager, viser til når togruten går
 	StartStasjon VARCHAR(30), -- Lagt til Startstasjon
 	EndeStasjon VARCHAR(30),  -- Lagt til endestasjon
 	CONSTRAINT Rute_PK PRIMARY KEY (RuteID)
@@ -66,24 +60,6 @@ CREATE TABLE IF NOT EXISTS TogruteForekomst(
 	CONSTRAINT Rute_FK1 FOREIGN KEY (OperatørNavn) REFERENCES Operatør(OperatørNavn)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
-);
-
---Gir ikke mening?
-
--- CREATE TABLE IF NOT EXISTS HarDelstrekning(
--- 	TogruteForekomstID	INTEGER NOT NULL,
--- 	DelSNavn VARCHAR(30), 
--- 	-- Fjernet avgang og ankomsttid, gir ikke mening å ha det for delstrekninger?
--- 	CONSTRAINT HarDelS_PK PRIMARY KEY (TogruteForekomstID, DelSNavn)
--- 	CONSTRAINT HarDelS_FK1 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
--- 		ON UPDATE CASCADE
--- 		ON DELETE CASCADE,
--- 	CONSTRAINT HarDelS_FK2 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
--- 		ON UPDATE CASCADE
--- 		ON DELETE CASCADE,
--- 	CONSTRAINT HarDelS_FK3 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
--- 		ON UPDATE CASCADE
--- 		ON DELETE CASCADE
 );
 
 
@@ -130,9 +106,10 @@ CREATE TABLE IF NOT EXISTS Billett(
 		ON DELETE CASCADE
 );
 
---Gir ikke mening
 
---  -- Bør kanskje legge inn dato her?
+
+--   Må legge til tidspunkt for hver stasjon her og endre fra DELstrekning til jernbanestasjon
+
 -- CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
 -- 	DelSNavn VARCHAR(30), --Gir ikke mening?
 -- 	BillettID INTEGER NOT NULL,
@@ -143,7 +120,7 @@ CREATE TABLE IF NOT EXISTS Billett(
 -- 	CONSTRAINT HarTogF_FK2 FOREIGN KEY (BillettID) REFERENCES Billett(BillettID)
 -- 		ON UPDATE CASCADE
 -- 		ON DELETE CASCADE
-);
+--);
 
 
 CREATE TABLE IF NOT EXISTS Vogn(
