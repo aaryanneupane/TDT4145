@@ -16,11 +16,11 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
           
 #Delstrekning
 c.execute('''INSERT OR IGNORE INTO Delstrekning VALUES 
-('Trondheim-Steinkjer', 120, 2, 'Trondheim', 'Steinkjer'),
-('Steinkjer-Mosjøen', 280, 1, 'Steinkjer', 'Mosjøen'),
-('Mosjøen-MoIRana', 90, 1, 'Mosjøen', 'MoIRana'),
-('MoIRana-Fauske', 170, 1, 'MoIRana', 'Fauske'),
-('Fauske-Bodø', 60, 1, 'Fauske', 'Bodø')
+('Trondheim-Steinkjer', 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
+('Steinkjer-Mosjøen', 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
+('Mosjøen-MoIRana', 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
+('MoIRana-Fauske', 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
+('Fauske-Bodø', 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø')
 ''')
           
 #Banestrekning
@@ -122,12 +122,39 @@ c.execute('''INSERT OR IGNORE INTO Seter VALUES
 (5, 9)
 ''')
 
-c.execute("SELECT * FROM Jernbanestasjon")
-c.execute("SELECT * FROM Delstrekning")
-c.execute("SELECT * FROM Banestrekning")
-c.execute("SELECT * FROM Operatør")
-rows = c.fetchall()
-print(rows)
+def getTogruter(stasjon : str, ukedag : str):
+    hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
+    alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
+    togruter = []
+    if((ukedag.lower() in hverdager) and ukedag.lower() in alledager):
+        c.execute("SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager ,ds.StartStasjon, ds.EndeStasjon FROM Togrute as tr INNER JOIN Delstrekning as ds USING (BaneNavn) WHERE tr.Ukedager = 'Hverdager' ")
+        rows = c.fetchall()
+        print(rows)
+        for row in rows:
+            if(stasjon in row):
+                togruter.append([row[0], row[1]])
+    else:
+        c.execute("SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon FROM Togrute as tr INNER JOIN Delstrekning as ds USING (BaneNavn) WHERE tr.Ukedager = 'Alle Dager' ")
+        rows = c.fetchall()
+        for row in rows:
+            if(stasjon in row):
+                togruter.append([row[0], row[1]])
+    # print(togruter)
+
+
+
+getTogruter('Mosjøen', 'fredag')
+
+
+
+
+
+# c.execute("SELECT * FROM Jernbanestasjon")
+# c.execute("SELECT * FROM Delstrekning")
+# c.execute("SELECT * FROM Banestrekning")
+# c.execute("SELECT * FROM Operatør")
+# rows = c.fetchall()
+# print(rows)
 
 con.commit()
 con.close()

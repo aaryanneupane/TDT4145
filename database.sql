@@ -10,11 +10,15 @@ CREATE TABLE IF NOT EXISTS Jernbanestasjon (
 
 CREATE TABLE IF NOT EXISTS Delstrekning (
 	DelSNavn VARCHAR(30), 
+	BaneNavn VARCHAR(30), -- Lagt til BaneNavn
 	LengdeIKm INTEGER NOT NULL,
 	AntallSpor INTEGER NOT NULL,
 	StartStasjon VARCHAR(30),
 	EndeStasjon	VARCHAR(30),
 	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn)
+	CONSTRAINT DelS_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
 	);
 
 
