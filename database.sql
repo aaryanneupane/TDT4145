@@ -1,36 +1,40 @@
-
-CREATE TABLE IF NOT EXISTS Banestrekning (
-	BaneNavn VARCHAR(30),
-	Fremdriftsenergi INTEGER,
-	StartStasjon VARCHAR(30),
-	EndeStasjon VARCHAR(30),
-	DelSNavn VARCHAR(30),
-	CONSTRAINT Bane_PK PRIMARY KEY (BaneNavn)
-	CONSTRAINT Bane_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE);
-
+CREATE TABLE IF NOT EXISTS Jernbanestasjon (
+	StasjonNavn	VARCHAR(30),
+	moh	FLOAT,
+	CONSTRAINT JernbaneS_PK PRIMARY KEY (StasjonNavn));
 
 CREATE TABLE IF NOT EXISTS Delstrekning (
-	DelSNavn VARCHAR(30),
+	DelSNavn VARCHAR(30), 
 	LengdeIKm INTEGER NOT NULL,
 	AntallSpor INTEGER NOT NULL,
 	StartStasjon VARCHAR(30),
 	EndeStasjon	VARCHAR(30),
 	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn));
 
+CREATE TABLE IF NOT EXISTS Banestrekning (
+	BaneNavn VARCHAR(30),
+	Fremdriftsenergi INTEGER,
+	StartStasjon VARCHAR(30),
+	EndeStasjon VARCHAR(30),
+	-- DelSNavn VARCHAR(30),
+	CONSTRAINT Bane_PK PRIMARY KEY (BaneNavn)
+	-- CONSTRAINT Bane_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
+	-- 	ON UPDATE CASCADE
+	-- 	ON DELETE CASCADE);
+    -- Gir ikke mening å ha med i databasen
 
-CREATE TABLE IF NOT EXISTS Jernbanestasjon (
-	StasjonNavn	VARCHAR(30),
-	moh	FLOAT,
-	CONSTRAINT JernbaneS_PK PRIMARY KEY (StasjonNavn));
 
+CREATE TABLE IF NOT EXISTS Operatør(
+	OperatørNavn VARCHAR(30),
+	CONSTRAINT Operatør_PK PRIMARY KEY (OperatørNavn));
 
 CREATE TABLE IF NOT EXISTS Togrute(
 	RuteID 	INTEGER NOT NULL,
-	HovedRetning	INTEGER	NOT NULL,
+	Hovedretning	VARCHAR(30), -- Endret til 'True'/'False' fremfor 1/0
 	BaneNavn VARCHAR(30),
 	OperatørNavn VARCHAR(30),
+	StartStasjon VARCHAR(30), -- Lagt til Startstasjon
+	EndeStasjon VARCHAR(30),  -- Lagt til endestasjon
 	CONSTRAINT Rute_PK PRIMARY KEY (RuteID)
 	CONSTRAINT Rute_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
 		ON UPDATE CASCADE
@@ -43,6 +47,8 @@ CREATE TABLE IF NOT EXISTS Togrute(
 CREATE TABLE IF NOT EXISTS TogruteForekomst(
 	TogruteForekomstID INTEGER NOT NULL,
 	OperatørNavn VARCHAR(30),
+	Ankomsttid VARCHAR(30),  -- Lagt til ankomsttid
+	Avgangstid 	VARCHAR(30), -- lagt til avgansgstid
 	CONSTRAINT Forekomst_PK PRIMARY KEY (TogruteForekomstID)
 	CONSTRAINT Rute_FK1 FOREIGN KEY (OperatørNavn) REFERENCES Operatør(OperatørNavn)
 		ON UPDATE CASCADE
@@ -53,8 +59,8 @@ CREATE TABLE IF NOT EXISTS TogruteForekomst(
 CREATE TABLE IF NOT EXISTS HarDelstrekning(
 	TogruteForekomstID	INTEGER NOT NULL,
 	DelSNavn VARCHAR(30),
-	Ankomsttid INTEGER,
-	Avgangstid 	INTEGER,
+	Ankomsttid VARCHAR(30), -- Endret fra Integer til varchar
+	Avgangstid 	VARCHAR(30), -- Endret fra Integer til varchar
 	CONSTRAINT HarDelS_PK PRIMARY KEY (TogruteForekomstID, DelSNavn)
 	CONSTRAINT HarDelS_FK1 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
 		ON UPDATE CASCADE
@@ -80,9 +86,7 @@ CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
 		ON DELETE CASCADE);
 
 
-CREATE TABLE IF NOT EXISTS Operatør(
-	OperatørNavn VARCHAR(30),
-	CONSTRAINT Operatør_PK PRIMARY KEY (OperatørNavn));
+
 
 
 CREATE TABLE IF NOT EXISTS HarVogner(
