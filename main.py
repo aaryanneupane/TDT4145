@@ -16,11 +16,11 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
           
 #Delstrekning
 c.execute('''INSERT OR IGNORE INTO Delstrekning VALUES 
-('Trond-Stein', 120, 2, 'Trondheim', 'Steinkjer'),
-('SteinMosjø', 280, 1, 'Steinkjer', 'Mosjøen'),
-('MosjøMoIRa', 90, 1, 'Mosjøen', 'MoIRana'),
-('MoIRaFaus', 170, 1, 'MoIRana', 'Fauske'),
-('FausBod', 60, 1, 'Fauske', 'Bodø')
+('Trondheim-Steinkjer', 120, 2, 'Trondheim', 'Steinkjer'),
+('Steinkjer-Mosjøen', 280, 1, 'Steinkjer', 'Mosjøen'),
+('Mosjøen-MoIRana', 90, 1, 'Mosjøen', 'MoIRana'),
+('MoIRana-Fauske', 170, 1, 'MoIRana', 'Fauske'),
+('Fauske-Bodø', 60, 1, 'Fauske', 'Bodø')
 ''')
           
 #Banestrekning
@@ -89,32 +89,26 @@ c.execute('''INSERT OR IGNORE INTO Billett VALUES
 # (3, 3)
 # ''')
 
-#Vogn Dummydata
+#Vogn (1001 tilsvarer SJ-sittevogn-1) og (2001 tilsvarer SJ-sovevogn-1)
 c.execute('''INSERT OR IGNORE INTO Vogn VALUES 
-(1002),
-(1003),
-(1005),
-(1009)
+(1001),  
+(2001)
 ''')
           
-#HarVogner Dummydata
+#HarVogner 
 c.execute('''INSERT OR IGNORE INTO HarVogner VALUES 
-('SJ', 1002),
-('SJ', 1003),
-('SJ', 1005),
-('SJ', 1009)
+('SJ', 1001),
+('SJ', 2001)
 ''')
           
-#Sovevogn Dummydata
-c.execute('''INSERT OR IGNORE INTO Sovevogn VALUES 
-(1002, 4),
-(1005, 2)
-''')
-
-#Sittevogn Dummydata
+#Sittevogn 
 c.execute('''INSERT OR IGNORE INTO Sittevogn VALUES 
-(1003, 12),
-(1009, 10)
+(1001, 3, 4)
+''')
+          
+#Sovevogn 
+c.execute('''INSERT OR IGNORE INTO Sovevogn VALUES 
+(2001, 4, 2)
 ''')
 
 #Plass Dummydata
@@ -126,7 +120,7 @@ c.execute('''INSERT OR IGNORE INTO Plass VALUES
 
 #Senger Dummydata
 c.execute('''INSERT OR IGNORE INTO Senger VALUES 
-(3, 2)
+(1, 2)
 ''')
 
 #Seter Dummydata

@@ -1,4 +1,7 @@
--- Har endret på rekken til de ulike tabellene slik at det vil kjøre, huske ikke ka det hete
+-- Har endret på rekken til de ulike tabellene slik at det vil kjøre
+-- Mangler fortsatt dato og tid på vært stopp ellers ferdig
+-- Forstår ikke hvordan DEl strekning funker
+-- Alle endringer er kommentert
 
 CREATE TABLE IF NOT EXISTS Jernbanestasjon (
 	StasjonNavn	VARCHAR(30),
@@ -65,21 +68,22 @@ CREATE TABLE IF NOT EXISTS TogruteForekomst(
 		ON DELETE CASCADE
 );
 
+--Gir ikke mening?
 
-CREATE TABLE IF NOT EXISTS HarDelstrekning(
-	TogruteForekomstID	INTEGER NOT NULL,
-	DelSNavn VARCHAR(30), 
-	-- Fjernet avgang og ankomsttid, gir ikke mening å ha det for delstrekninger?
-	CONSTRAINT HarDelS_PK PRIMARY KEY (TogruteForekomstID, DelSNavn)
-	CONSTRAINT HarDelS_FK1 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE,
-	CONSTRAINT HarDelS_FK2 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE,
-	CONSTRAINT HarDelS_FK3 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+-- CREATE TABLE IF NOT EXISTS HarDelstrekning(
+-- 	TogruteForekomstID	INTEGER NOT NULL,
+-- 	DelSNavn VARCHAR(30), 
+-- 	-- Fjernet avgang og ankomsttid, gir ikke mening å ha det for delstrekninger?
+-- 	CONSTRAINT HarDelS_PK PRIMARY KEY (TogruteForekomstID, DelSNavn)
+-- 	CONSTRAINT HarDelS_FK1 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
+-- 		ON UPDATE CASCADE
+-- 		ON DELETE CASCADE,
+-- 	CONSTRAINT HarDelS_FK2 FOREIGN KEY (TogruteForekomstID) REFERENCES TogruteForekomst(TogruteForekomstID)
+-- 		ON UPDATE CASCADE
+-- 		ON DELETE CASCADE,
+-- 	CONSTRAINT HarDelS_FK3 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
+-- 		ON UPDATE CASCADE
+-- 		ON DELETE CASCADE
 );
 
 
@@ -126,18 +130,19 @@ CREATE TABLE IF NOT EXISTS Billett(
 		ON DELETE CASCADE
 );
 
+--Gir ikke mening
 
- -- Bør kanskje legge inn dato her?
-CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
-	DelSNavn VARCHAR(30), --Gir ikke mening?
-	BillettID INTEGER NOT NULL,
-	CONSTRAINT HarTogF_PK PRIMARY KEY (DelSNavn, BillettID)
-	CONSTRAINT HarTogF_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE,
-	CONSTRAINT HarTogF_FK2 FOREIGN KEY (BillettID) REFERENCES Billett(BillettID)
-		ON UPDATE CASCADE
-		ON DELETE CASCADE
+--  -- Bør kanskje legge inn dato her?
+-- CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
+-- 	DelSNavn VARCHAR(30), --Gir ikke mening?
+-- 	BillettID INTEGER NOT NULL,
+-- 	CONSTRAINT HarTogF_PK PRIMARY KEY (DelSNavn, BillettID)
+-- 	CONSTRAINT HarTogF_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
+-- 		ON UPDATE CASCADE
+-- 		ON DELETE CASCADE,
+-- 	CONSTRAINT HarTogF_FK2 FOREIGN KEY (BillettID) REFERENCES Billett(BillettID)
+-- 		ON UPDATE CASCADE
+-- 		ON DELETE CASCADE
 );
 
 
@@ -163,6 +168,7 @@ CREATE TABLE IF NOT EXISTS HarVogner(
 CREATE TABLE IF NOT EXISTS Sovevogn(
 	RegNr INTEGER NOT NULL,
 	AntallKupe	INTEGER,
+	AntallSengerPerKupe INTEGER, -- Lagt til AntallSengerPerKupe ettersom vi ikke har sovekupé som egen entitetsklasse
 	CONSTRAINT SitteV_PK PRIMARY KEY (RegNr)
 	CONSTRAINT SitteV_FK1 FOREIGN KEY (RegNr) REFERENCES Vogn(RegNr)
 		ON UPDATE CASCADE
@@ -172,6 +178,7 @@ CREATE TABLE IF NOT EXISTS Sovevogn(
 
 CREATE TABLE IF NOT EXISTS Sittevogn(
 	RegNr INTEGER NOT NULL,
+	AntallRader INTEGER, --Lagt til antall rader
 	SeterPerRad	INTEGER,
 	CONSTRAINT SitteV_PK PRIMARY KEY (RegNr)
 	CONSTRAINT SitteV_FK1 FOREIGN KEY (RegNr) REFERENCES Vogn(RegNr)
