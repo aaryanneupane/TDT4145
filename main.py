@@ -127,23 +127,31 @@ def getTogruter(stasjon : str, ukedag : str):
     alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
     togruter = []
     if((ukedag.lower() in hverdager) and ukedag.lower() in alledager):
-        c.execute("SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager ,ds.StartStasjon, ds.EndeStasjon FROM Togrute as tr INNER JOIN Delstrekning as ds USING (BaneNavn) WHERE tr.Ukedager = 'Hverdager' ")
+        c.execute('''SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager , ds.StartStasjon, ds.EndeStasjon 
+        FROM Togrute as tr 
+        INNER JOIN Delstrekning as ds 
+        USING (BaneNavn) 
+        WHERE Ukedager = 'Hverdager' ''')
         rows = c.fetchall()
-        print(rows)
+        # print(rows)
         for row in rows:
             if(stasjon in row):
                 togruter.append([row[0], row[1]])
-    else:
-        c.execute("SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon FROM Togrute as tr INNER JOIN Delstrekning as ds USING (BaneNavn) WHERE tr.Ukedager = 'Alle Dager' ")
+    elif (ukedag.lower() in alledager):
+        c.execute('''SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
+        FROM Togrute as tr 
+        INNER JOIN Delstrekning as ds 
+        USING (BaneNavn) 
+        WHERE Ukedager = 'AlleDager' ''')
         rows = c.fetchall()
         for row in rows:
             if(stasjon in row):
                 togruter.append([row[0], row[1]])
-    # print(togruter)
+    print(togruter)
 
 
 
-getTogruter('Mosjøen', 'fredag')
+getTogruter('Mosjøen', 'lørdag')
 
 
 
