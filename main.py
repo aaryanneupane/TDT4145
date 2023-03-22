@@ -75,13 +75,6 @@ c.execute('''INSERT OR IGNORE INTO Billett VALUES
 (3, 3)
 ''')
 
-# #HarTogruteForekomst Denne gir ikke mening
-# c.execute('''INSERT OR IGNORE INTO HarTogruteForekomst VALUES 
-# (1, 1),
-# (2, 2),
-# (3, 3)
-# ''')
-
 #Vogn (1001 tilsvarer SJ-sittevogn-1) og (2001 tilsvarer SJ-sovevogn-1)
 c.execute('''INSERT OR IGNORE INTO Vogn VALUES 
 (1001),  

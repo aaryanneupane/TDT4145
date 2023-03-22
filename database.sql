@@ -1,4 +1,4 @@
--- Mangler fortsatt tid på vært stopp, må endre hartogruteforekomst 
+-- Mangler fortsatt tid på vært stopp
 -- Mangler Antall sovevogner og sittevogner knyttet til vogn
 
 CREATE TABLE IF NOT EXISTS Jernbanestasjon (
@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Delstrekning (
 	AntallSpor INTEGER NOT NULL,
 	StartStasjon VARCHAR(30),
 	EndeStasjon	VARCHAR(30),
-	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn)
+	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn, BaneNavn)
 	CONSTRAINT DelS_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
@@ -111,20 +111,13 @@ CREATE TABLE IF NOT EXISTS Billett(
 );
 
 
+CREATE TABLE IF NOT EXISTS Passering(
+	PasseringID INTEGER NOT NULL,
+	AvgangsTid	VARCHAR(30),
+	AnkosmtTid  VARCHAR(30),
+	CONSTRAINT Passering_PK PRIMARY KEY (PasseringID)
+);
 
---   Må legge til tidspunkt for hver stasjon her og endre fra DELstrekning til jernbanestasjon
-
--- CREATE TABLE IF NOT EXISTS HarTogruteForekomst(
--- 	DelSNavn VARCHAR(30), --Gir ikke mening?
--- 	BillettID INTEGER NOT NULL,
--- 	CONSTRAINT HarTogF_PK PRIMARY KEY (DelSNavn, BillettID)
--- 	CONSTRAINT HarTogF_FK1 FOREIGN KEY (DelSNavn) REFERENCES Delstrekning(DelSNavn)
--- 		ON UPDATE CASCADE
--- 		ON DELETE CASCADE,
--- 	CONSTRAINT HarTogF_FK2 FOREIGN KEY (BillettID) REFERENCES Billett(BillettID)
--- 		ON UPDATE CASCADE
--- 		ON DELETE CASCADE
---);
 
 
 CREATE TABLE IF NOT EXISTS Vogn(
