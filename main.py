@@ -16,11 +16,19 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
           
 #Delstrekning
 c.execute('''INSERT OR IGNORE INTO Delstrekning VALUES 
-('Trondheim-Steinkjer', 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
-('Steinkjer-Mosjøen', 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
-('Mosjøen-MoIRana', 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
-('MoIRana-Fauske', 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
-('Fauske-Bodø', 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø')
+('Trondheim-Steinkjer1', 1,'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
+('Trondheim-Steinkjer2', 2, 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
+('Trondheim-Steinkjer3', 3, 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
+('Steinkjer-Mosjøen1', 1, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
+('Steinkjer-Mosjøen2', 2, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
+('Steinkjer-Mosjøen3', 3, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
+('Mosjøen-MoIRana1', 1, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
+('Mosjøen-MoIRana2', 2, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
+('Mosjøen-MoIRana3', 3, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
+('MoIRana-Fauske1', 1, 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
+('MoIRana-Fauske2', 2, 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
+('Fauske-Bodø1', 1, 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø'),
+('Fauske-Bodø2', 2, 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø')
 ''')
           
 #Banestrekning
@@ -75,21 +83,46 @@ c.execute('''INSERT OR IGNORE INTO Billett VALUES
 (3, 3)
 ''')
 
-#Vogn (1001 tilsvarer SJ-sittevogn-1) og (2001 tilsvarer SJ-sovevogn-1)
+#Kjører
+# c.execute('''INSERT OR IGNORE INTO Kjører VALUES 
+# (1, 1, 'Trondheim', '0749' ),
+# (2, 1, 'Steinkjer', '0951'),
+# (3, 1, 'Mosjøen', '1320')
+# (4, 1, 'MoIRana', '1431'),
+# (5, 1, 'Fauske', '1649'),
+# (6, 1, 'Bodø', '1734'),
+# (7, 2, 'Trondheim', '2305' ),
+# (8, 2, 'Steinkjer', '0057'),
+# (9, 2, 'Mosjøen', '0441')
+# (10, 2, 'MoIRana', '0555'),
+# (11, 2, 'Fauske', '0819'),
+# (12, 2, 'Bodø', '0905'),
+# (13, 3, 'Trondheim', '1413'),
+# (14, 3, 'Steinkjer', '1231'),
+# (15, 3, 'Mosjøen', '0914'),
+# (16, 3, 'MoIRana', '0811')
+# ''')
+
+#Vogn (1001 og 1002 tilsvarer SJ-sittevogn-1) og (2001 tilsvarer SJ-sovevogn-1)
 c.execute('''INSERT OR IGNORE INTO Vogn VALUES 
-(1001),  
+(1001), 
+(1002), 
 (2001)
 ''')
           
 #HarVogner 
 c.execute('''INSERT OR IGNORE INTO HarVogner VALUES 
-('SJ', 1001),
-('SJ', 2001)
+('SJ', 1, 1001),
+('SJ', 1, 1002),
+('SJ', 2, 1001),
+('SJ', 2, 2001),
+('SJ', 3, 1001)
 ''')
           
 #Sittevogn 
 c.execute('''INSERT OR IGNORE INTO Sittevogn VALUES 
-(1001, 3, 4)
+(1001, 3, 4),
+(1002, 3, 4)
 ''')
           
 #Sovevogn 
@@ -118,33 +151,48 @@ c.execute('''INSERT OR IGNORE INTO Seter VALUES
 def getTogruter(stasjon : str, ukedag : str):
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
     alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
-    togruter = []
+    togruteID = set()
     if((ukedag.lower() in hverdager) and ukedag.lower() in alledager):
-        c.execute('''SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager , ds.StartStasjon, ds.EndeStasjon 
+        
+        c.execute('''SELECT tr.RuteID, tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
         FROM Togrute as tr 
         INNER JOIN Delstrekning as ds 
-        USING (BaneNavn) 
-        WHERE Ukedager = 'Hverdager' ''')
+        ON ds.RuteID = tr.RuteID 
+        WHERE Ukedager = 'Hverdager' 
+        AND (tr.StartStasjon = ? OR tr.EndeStasjon = ? or ds.StartStasjon = ?  OR ds.EndeStasjon = ?)''', (stasjon,stasjon,stasjon,stasjon,))
+        
         rows = c.fetchall()
-        # print(rows)
+        
         for row in rows:
-            if(stasjon in row):
-                togruter.append([row[0], row[1]])
+            togruteID.add(row[0])
+
     elif (ukedag.lower() in alledager):
-        c.execute('''SELECT tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
+        c.execute('''SELECT tr.RuteID, tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
         FROM Togrute as tr 
         INNER JOIN Delstrekning as ds 
-        USING (BaneNavn) 
-        WHERE Ukedager = 'AlleDager' ''')
+        ON ds.RuteID = tr.RuteID 
+        WHERE Ukedager = 'AlleDager' 
+        AND (tr.StartStasjon = ? OR tr.EndeStasjon = ? or ds.StartStasjon = ?  OR ds.EndeStasjon = ?)''', (stasjon,stasjon,stasjon,stasjon,))
         rows = c.fetchall()
         for row in rows:
-            if(stasjon in row):
-                togruter.append([row[0], row[1]])
-    print(togruter)
+            togruteID.add(row[0])
+
+    output = ''
+
+    if (len(togruteID) == 0):
+            output += "Ingen togruter som passer til krav."
+    for togrute in togruteID:
+        if (togrute == 1):
+            output += "Trondheim-Bodø, Dagtog"
+        if (togrute == 2):
+            output += "\nTrondheim-Bodø, Nattog"
+        if (togrute == 3):
+            output += "\nMo i Rana-Trondheim, Dagtog"
+
+    print(output)
 
 
-
-getTogruter('Mosjøen', 'lørdag')
+getTogruter('Mosjøen', 'Lørdag')
 
 
 
