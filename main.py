@@ -44,7 +44,7 @@ c.execute('''INSERT OR IGNORE INTO Operatør VALUES
 #Togrute  
 c.execute('''INSERT OR IGNORE INTO Togrute VALUES 
 (1, 'True', 'Nordlandsbanen', 'SJ', 'Hverdager', 'Trondheim', 'Bodø'),
-(2, 'True', 'Nordlandsbanen', 'SJ', 'Alle dager', 'Trondheim', 'Bodø'),
+(2, 'True', 'Nordlandsbanen', 'SJ', 'alleDager', 'Trondheim', 'Bodø'),
 (3, 'False', 'Nordlandsbanen', 'SJ', 'Hverdager', 'MoIRana' , 'Trondheim')
 ''')
 
@@ -149,9 +149,12 @@ c.execute('''INSERT OR IGNORE INTO Seter VALUES
 ''')
 
 def getTogruter(stasjon : str, ukedag : str):
+
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
     alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
+
     togruteID = set()
+
     if((ukedag.lower() in hverdager) and ukedag.lower() in alledager):
         
         c.execute('''SELECT tr.RuteID, tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
@@ -192,7 +195,7 @@ def getTogruter(stasjon : str, ukedag : str):
     print(output)
 
 
-getTogruter('Mosjøen', 'Lørdag')
+getTogruter('Mosjøen', 'Fredag')
 
 
 

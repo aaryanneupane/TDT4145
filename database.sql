@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS Billett(
 		ON DELETE CASCADE
 );
 
--- Lagt til ny tabell
+-- Lagt til ny tabell, Må legge til ankomsttid og avgangstid pluss delstrekning
 CREATE TABLE IF NOT EXISTS Kjører(
 	KjørerID INTEGER NOT NULL,
 	RuteID 	INTEGER NOT NULL,
