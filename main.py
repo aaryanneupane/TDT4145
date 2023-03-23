@@ -176,6 +176,20 @@ def getTogruter(stasjon : str, ukedag : str):
 getTogruter('Mosjøen', 'Lørdag')
 
 
+def addKunde():
+#Hente informasjon from kunden
+    navn = input('Vennligst oppgi fullt navn: ')
+    epost = input('Oppgi gyldig epost adresse: ')
+    tlf = input('Oppgi gyldig telefon nummer: ')
+#Finne unik primærnøkkel for ny kunde
+    c.execute('''SELECT KundeNr FROM Kunde''')
+    rows = c.fetchall()
+    nyID = len(rows) + 1
+#Legge til i databasen
+    c.execute('''INSERT INTO Kunde (KundeNr, Navn, epost, tlf)
+    VALUES (?, ?, ?, ?)''', (nyID, navn, epost, tlf))
+
+
 
 
 
