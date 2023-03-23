@@ -181,12 +181,12 @@ def addKunde():
     epost = input('Oppgi gyldig epost adresse: ')
     passord = input('Oppgi passord: ')
     bekreftPassord = input('Bekreft passord: ')
+#Passord verifikasjon
     while (bekreftPassord != passord):
         bekreftPassord = input('''(Tast 1 om du vil skrive passord på nytt) Passordene samsvarer ikke, vennligst tast inn samme passord: ''')
         if (bekreftPassord == '1'):
             passord = input('Oppgi nytt passord: ')
             bekreftPassord = input('Bekreft passord: ')
-
     navn = input('Vennligst oppgi fullt navn: ')
     tlf = input('Oppgi gyldig telefon nummer: ')
 #Finne unik primærnøkkel for ny kunde
@@ -197,17 +197,7 @@ def addKunde():
     c.execute('''INSERT INTO Kunde (KundeNr, Navn, epost, tlf, passord)
     VALUES (?, ?, ?, ?, ?)''', (nyID, navn, epost, tlf, passord))
 
-addKunde()
 
-
-
-
-# c.execute("SELECT * FROM Jernbanestasjon")
-# c.execute("SELECT * FROM Delstrekning")
-# c.execute("SELECT * FROM Banestrekning")
-# c.execute("SELECT * FROM Operatør")
-# rows = c.fetchall()
-# print(rows)
 
 con.commit()
 con.close()
