@@ -83,25 +83,6 @@ c.execute('''INSERT OR IGNORE INTO Billett VALUES
 (3, 3)
 ''')
 
-#Kjører
-# c.execute('''INSERT OR IGNORE INTO Kjører VALUES 
-# (1, 1, 'Trondheim', '0749' ),
-# (2, 1, 'Steinkjer', '0951'),
-# (3, 1, 'Mosjøen', '1320')
-# (4, 1, 'MoIRana', '1431'),
-# (5, 1, 'Fauske', '1649'),
-# (6, 1, 'Bodø', '1734'),
-# (7, 2, 'Trondheim', '2305' ),
-# (8, 2, 'Steinkjer', '0057'),
-# (9, 2, 'Mosjøen', '0441')
-# (10, 2, 'MoIRana', '0555'),
-# (11, 2, 'Fauske', '0819'),
-# (12, 2, 'Bodø', '0905'),
-# (13, 3, 'Trondheim', '1413'),
-# (14, 3, 'Steinkjer', '1231'),
-# (15, 3, 'Mosjøen', '0914'),
-# (16, 3, 'MoIRana', '0811')
-# ''')
 
 #Vogn (1001 og 1002 tilsvarer SJ-sittevogn-1) og (2001 tilsvarer SJ-sovevogn-1)
 c.execute('''INSERT OR IGNORE INTO Vogn VALUES 
