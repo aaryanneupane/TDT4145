@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS Delstrekning (
 	AntallSpor INTEGER NOT NULL,
 	StartStasjon VARCHAR(30),
 	EndeStasjon	VARCHAR(30),
+	Ankomsttid VARCHAR(30),
 	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn, BaneNavn)
 	CONSTRAINT DelS_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
 		ON UPDATE CASCADE
@@ -46,6 +47,8 @@ CREATE TABLE IF NOT EXISTS Togrute(
 	Ukedager VARCHAR(30), --Lagt til Ukedager, viser til når togruten går
 	StartStasjon VARCHAR(30), -- Lagt til Startstasjon
 	EndeStasjon VARCHAR(30),  -- Lagt til endestasjon
+	Avgangstid VARCHAR(30),
+	Ankomsttid VARCHAR(30),
 	CONSTRAINT Rute_PK PRIMARY KEY (RuteID)
 	CONSTRAINT Rute_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
 		ON UPDATE CASCADE
@@ -73,6 +76,7 @@ CREATE TABLE IF NOT EXISTS Kunde(
 	Navn VARCHAR(30),
 	epost VARCHAR(30),
 	tlf	VARCHAR(10),
+	passord VARCHAR(30),
 	CONSTRAINT Kunde_PK PRIMARY KEY (KundeNr)
 );
 
@@ -186,6 +190,26 @@ CREATE TABLE IF NOT EXISTS Seter(
 		ON DELETE CASCADE
 );
 
+-- Lagt til ny tabell Mellomstasjon
+CREATE TABLE IF NOT EXISTS AnkommerStasjon(
+	RuteID 	INTEGER NOT NULL,
+	StasjonNavn	VARCHAR(30),
+	Ankomsttid VARCHAR(30),
+	CONSTRAINT Mellomstasjon_PK PRIMARY KEY (RuteID, StasjonNavn, Ankomsttid )
+	CONSTRAINT Mellomstasjon_FK1 FOREIGN KEY (StasjonNavn) REFERENCES Jerbanestasjon(StasjonNavn)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	CONSTRAINT Mellomstasjon_FK2 FOREIGN KEY (RuteID) REFERENCES Togrute(RuteID)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+);
+
+
+CREATE TABLE IF NOT EXISTS KjørendeTog(
+	RuteID INTEGER NOT NULL,
+	Dato VARCHAR(30) NOT NULL,
+	CONSTRAINT KjørendeTog_PK PRIMARY KEY (RuteID, Dato)
+);
 
 
 
