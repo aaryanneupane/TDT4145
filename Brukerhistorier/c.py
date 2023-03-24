@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
 def getTogruter(stasjon : str, ukedag : str):

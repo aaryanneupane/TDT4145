@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS Delstrekning (
 	AntallSpor INTEGER NOT NULL,
 	StartStasjon VARCHAR(30),
 	EndeStasjon	VARCHAR(30),
+	Ankomsttid VARCHAR(30),
 	CONSTRAINT DelS_PK PRIMARY KEY (DelSNavn, BaneNavn)
 	CONSTRAINT DelS_FK1 FOREIGN KEY (BaneNavn) REFERENCES Banestrekning(BaneNavn)
 		ON UPDATE CASCADE

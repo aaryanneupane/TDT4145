@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
 def searchTogrute():
@@ -34,7 +34,7 @@ def searchTogrute():
                 print('\nNattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
     else: #Håndetere delstrekning
-        c.execute('''SELECT tr.ruteid, ds.startstasjon, ds.endestasjon, kt.dato, ak.stasjonnavn, ak.ankomsttid
+        c.execute('''SELECT tr.ruteid, ds.startstasjon, ds.endestasjon, kt.dato, ak.stasjonnavn, ak.ankomsttid, ds.ankomsttid
         FROM ((((togrute as tr INNER JOIN delstrekning as ds USING (ruteID)) INNER JOIN kjørendetog as kt USING (ruteID)) INNER JOIN ankommerstasjon as ak USING (ruteID))) 
         WHERE (((ds.startstasjon = ?) AND (ds.endestasjon = ?)) AND ak.stasjonnavn = ?  AND (kt.dato = ? OR kt.dato = ?))''', (startStasjon, sluttStasjon, startStasjon, dato, nesteDato,))
         
@@ -50,16 +50,14 @@ def searchTogrute():
         for row in rows_sorted:
             print('----------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 3):
-                print('\nMorgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nMorgentog fra Mo i Rana til Trondheim på datoen ' + row[-4] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 1):
-                print('\nDagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nDagtog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 2):
-                print('\nNattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nNattog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
-
-searchTogrute()
 
 con.commit()
 con.close()

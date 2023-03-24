@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime, timedelta
-con = sqlite3.connect("database.db")
+con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
 def addKunde():
@@ -23,7 +23,6 @@ def addKunde():
 #Legge til i databasen
     c.execute('''INSERT INTO Kunde (KundeNr, Navn, epost, tlf, passord)
     VALUES (?, ?, ?, ?, ?)''', (nyID, navn, epost, tlf, passord))
-    
 
 con.commit()
 con.close()
