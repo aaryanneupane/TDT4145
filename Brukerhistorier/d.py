@@ -17,6 +17,7 @@ def searchTogrute():
     From togrute as tr INNER JOIN KjørendeTog as kt using (ruteID)
     WHERE tr.startstasjon = ? AND tr.endestasjon = ? AND (kt.dato = ? OR kt.dato = ?)''', (startStasjon, sluttStasjon, dato, nesteDato))
     bane = c.fetchall()
+
     #Håndtere en banestrekning
     if (len(bane) > 0):
         print('----------------------------------------------------------------------------------------------------------------------------------------------')
@@ -25,7 +26,7 @@ def searchTogrute():
         for row in bane_sorted:
             print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 3):
-                print('\nMorgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nMorgentog fra Mo i Rana til Trondheim ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 1):
                 print('\nDagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
@@ -33,6 +34,7 @@ def searchTogrute():
             if (row[0] == 2):
                 print('\nNattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
+    
     else: #Håndetere delstrekning
         c.execute('''SELECT tr.ruteid, ds.startstasjon, ds.endestasjon, kt.dato, ak.stasjonnavn, ak.ankomsttid, ds.ankomsttid
         FROM ((((togrute as tr INNER JOIN delstrekning as ds USING (ruteID)) INNER JOIN kjørendetog as kt USING (ruteID)) INNER JOIN ankommerstasjon as ak USING (ruteID))) 
@@ -59,5 +61,3 @@ def searchTogrute():
                 print('\nNattog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
 
-con.commit()
-con.close()

@@ -115,6 +115,22 @@ CREATE TABLE IF NOT EXISTS Billett(
 		ON DELETE CASCADE
 );
 
+-- Lagt til ny tabell, Må legge til ankomsttid og avgangstid pluss delstrekning
+CREATE TABLE IF NOT EXISTS Kjører(
+	KjørerID INTEGER NOT NULL,
+	RuteID 	INTEGER NOT NULL,
+	StasjonNavn	VARCHAR(30),
+	Tidspunkt	VARCHAR(30),
+	CONSTRAINT Kjører_PK PRIMARY KEY (KjørerID)
+	CONSTRAINT Kjører_FK1 FOREIGN KEY (RuteID) REFERENCES Togrute(RuteID)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	CONSTRAINT Kjører_FK2 FOREIGN KEY (StasjonNavn) REFERENCES Jernbanestasjon(StasjonNavn)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+);
+
+
 
 CREATE TABLE IF NOT EXISTS Vogn(
 	RegNr INTEGER NOT NULL,
