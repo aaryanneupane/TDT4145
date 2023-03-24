@@ -55,12 +55,12 @@ c.execute('''INSERT OR IGNORE INTO TogruteForekomst VALUES
 (3, 'SJ', '0811', '1413')
 ''')
 
-#Kunde Dummydata
-c.execute('''INSERT OR IGNORE INTO Kunde VALUES 
-(1, 'Erlend', 'erlend@gmail.com', '12345667', '1234'),
-(2, 'Aaryan', 'aaryan@gmail.com', '12345687' , '1234'),
-(3, 'Joachim', 'joachim@gmail.com', '12345678', '1234')
-''')
+# #Kunde Dummydata
+# c.execute('''INSERT OR IGNORE INTO Kunde VALUES 
+# (1, 'Erlend', 'erlend@gmail.com', '12345667', '1234'),
+# (2, 'Aaryan', 'aaryan@gmail.com', '12345687' , '1234'),
+# (3, 'Joachim', 'joachim@gmail.com', '12345678', '1234')
+# ''')
 
 #Kundeordre Dummydata
 c.execute('''INSERT OR IGNORE INTO Kundeordre VALUES 
@@ -78,9 +78,9 @@ c.execute('''INSERT OR IGNORE INTO OrdreForekomst VALUES
 
 #Billett Dummydata
 c.execute('''INSERT OR IGNORE INTO Billett VALUES 
-(1, 1),
-(2, 2),
-(3, 3)
+(1, 1, 1),
+(2, 2, 2),
+(3, 1, 3)
 ''')
 
 
@@ -212,6 +212,9 @@ def addKunde():
     VALUES (?, ?, ?, ?, ?)''', (nyID, navn, epost, tlf, passord))
 
 
+#Må endre på databasen for at dette skal funke, For at dette skal funke må alle attributter nevnt herunder 
+#Ta del av en Billet entitetskalssen, skal se på dette i morgen.
+
 # Lager en funksjon for å finne tilgjengelige billetter
 def ledige_billetter(RuteID, dato):
     c = con.cursor()
@@ -225,7 +228,7 @@ def ledige_billetter(RuteID, dato):
 # Lag en funksjon for å reservere en billett
 def reserve_ticket(BillettID, Navn):
     c = con.cursor()
-    query = "UPDATE tickets SET is_reserved = 1, Navn = ? WHERE BillettID = ?"
+    query = "UPDATE Billett SET is_reserved = 1, Navn = ? WHERE BillettID = ?"
     # is_reserved = 1 betyr at billetten er reservert
     params = (Navn, BillettID)
     c.execute(query, params)
