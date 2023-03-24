@@ -128,6 +128,20 @@ c.execute('''INSERT OR IGNORE INTO Seter VALUES
 (12, 8),
 (5, 9)
 ''')
+          
+#Mellomstasjon
+c.execute('''INSERT OR IGNORE INTO Mellomstasjon VALUES 
+(1, 'Steinkjer', '0951', '0956'),
+(1, 'Mosjøen', '1320', '1325'),
+(1, 'MoIRana', '1431', '1436'),
+(1, 'Fauske', '1649', '1654'),
+(2, 'Steinkjer', '0057', '0102'),
+(2, 'Mosjøen', '0441', '0446'),
+(2, 'MoIRana', '0555', '0600'),
+(2, 'Fauske', '0819', '0824'),
+(3, 'Mosjøen', '0914', '0919'),
+(3, 'Steinkjer', '1231', '1236')
+''')
 
 def getTogruter(stasjon : str, ukedag : str):
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
