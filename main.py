@@ -129,6 +129,16 @@ c.execute('''INSERT OR IGNORE INTO Seter VALUES
 (5, 9)
 ''')
 
+#KjørendeTog DummyData
+c.execute('''INSERT OR IGNORE INTO KjørendeTog VALUES
+(1, '03.04.2023'),
+(2, '03.04.2023'),
+(3, '03.04.2023'),
+(1, '04.04.2023'),
+(2, '04.04.2023'),
+(3, '04.04.2023')
+''')
+
 def getTogruter(stasjon : str, ukedag : str):
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
     alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
@@ -172,8 +182,7 @@ def getTogruter(stasjon : str, ukedag : str):
 
     print(output)
 
-
-getTogruter('Mosjøen', 'Lørdag')
+# getTogruter('Mosjøen', 'Lørdag')
 
 
 def addKunde():
@@ -197,6 +206,19 @@ def addKunde():
     c.execute('''INSERT INTO Kunde (KundeNr, Navn, epost, tlf, passord)
     VALUES (?, ?, ?, ?, ?)''', (nyID, navn, epost, tlf, passord))
 
+# def searchTogrute():
+#     startStasjon = input('Oppgi en startsjon: ')
+#     sluttStasjon = input('Oppgi en endestasjon: ')
+#     dato = input('Oppgi en gyldig dato i format dd.mm.yyyy: ')
+#     tid = input('Oppgi et gyldig tidspunkt i format tt.mm (09.40): ')
+
+
+# searchTogrute()
+
+#GROV SPØRRING
+#sqlite> SELECT togrute.ruteid, ukedager, togrute.startstasjon,togrute.endestasjon, 
+# delstrekning.startstasjon, delstrekning.endestasjon, kjørendetog.dato 
+# FROM (togrute  inner join delstrekning using (ruteID)) inner join kjørendetog(ruteID)
 
 
 con.commit()
