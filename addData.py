@@ -1,9 +1,6 @@
 import sqlite3
-from datetime import datetime, timedelta
+
 con = sqlite3.connect("./Database/database.db")
-
-
-#Create cursor
 c = con.cursor()
 
 #Jernbanestasjon
@@ -183,4 +180,3 @@ c.execute('''INSERT OR IGNORE INTO AnkommerStasjon VALUES
 
 con.commit()
 con.close()
-
