@@ -213,6 +213,38 @@ def addKunde():
 
 
 
+# Lager en funksjon for å finne tilgjengelige billetter
+def ledige_billetter(togruteID, dato):
+  cursor = db.cursor()
+  query = "SELECT * FROM tickets WHERE togruteID = %s AND journey_date = %s AND is_reserved = 0"
+  # is_reserved = 0 betyr at billetten ikke er reservert ennå
+  params = (togruteID, dato)
+  cursor.execute(query, params)
+  result = cursor.fetchall()
+  return result
+
+# Lag en funksjon for å reservere en billett
+def reserve_ticket(BillettID, OrdreNr):
+  cursor = db.cursor()
+  query = "UPDATE tickets SET is_reserved = 1, OrdreNr = %s WHERE BillettID = %s"
+  # is_reserved = 1 betyr at billetten er reservert
+  params = (OrdreNr, BillettID)
+  cursor.execute(query, params)
+  db.commit()
+
+# Eksempel på bruk av funksjon
+togruteID = "Oslo - Bergen"
+dato = "2023-04-15"
+available_tickets = ledige_billetter(togruteID, dato)
+if len(available_tickets) > 0:
+  # Lar kunde velge en billett fra listen over tilgjengelige billetter
+  BillettID = available_tickets[0][0]
+  OrdreNr = "Ola Nordmann"
+  reserve_ticket(BillettID, OrdreNr)
+  print("Billetten er reservert!")
+else:
+  print("Ingen billetter er tilgjengelige for denne ruten og datoen.")    
+
 con.commit()
 con.close()
 
