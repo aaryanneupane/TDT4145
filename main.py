@@ -235,14 +235,14 @@ def reserve_ticket(BillettID, Navn):
     con.commit()
 
 # Eksempel på hvordan du kan bruke funksjonene
-train_route = "Oslo - Bergen"
-journey_date = "2023-04-15"
-available_tickets = ledige_billetter(train_route, journey_date)
+RuteID = "Oslo - Bergen"
+dato = "2023-04-15"
+available_tickets = ledige_billetter(RuteID, dato)
 if len(available_tickets) > 0:
     # La kunden velge en billett fra listen over tilgjengelige billetter
-    ticket_id = available_tickets[0][0]
-    customer_name = "Ola Nordmann"
-    reserve_ticket(ticket_id, customer_name)
+    BillettID = available_tickets[0][0]
+    Navn = "Ola Nordmann"
+    reserve_ticket(BillettID, Navn)
     print("Billetten er reservert!")
 else:
     print("Ingen billetter er tilgjengelige for denne ruten og datoen.")
