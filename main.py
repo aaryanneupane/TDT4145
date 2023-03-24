@@ -162,17 +162,23 @@ c.execute('''INSERT OR IGNORE INTO KjørendeTog VALUES
 ''')
           
 #Mellomstasjon
-c.execute('''INSERT OR IGNORE INTO Mellomstasjon VALUES 
-(1, 'Steinkjer', '09.51', '09.56'),
-(1, 'Mosjøen', '13.20', '13.25'),
-(1, 'MoIRana', '14.31', '14.36'),
-(1, 'Fauske', '16.49', '16.54'),
-(2, 'Steinkjer', '00.57', '01.02'),
-(2, 'Mosjøen', '04.41', '04.46'),
-(2, 'MoIRana', '05.55', '06.00'),
-(2, 'Fauske', '08.19', '08.24'),
-(3, 'Mosjøen', '09.14', '09.19'),
-(3, 'Steinkjer', '12.31', '12.36')
+c.execute('''INSERT OR IGNORE INTO AnkommerStasjon VALUES 
+(1, 'Steinkjer', '09.51'),
+(1, 'Mosjøen', '13.20'),
+(1, 'MoIRana', '14.31'),
+(1, 'Fauske', '16.49'),
+(1, 'Trondheim', '07.49'),
+(1, 'Bodø', '17.34'),
+(2, 'Steinkjer', '00.57'),
+(2, 'Mosjøen', '04.41'),
+(2, 'MoIRana', '05.55'),
+(2, 'Fauske', '08.19'),
+(2, 'Trondheim', '23.05'),
+(2, 'Bodø', '09.05'),
+(3, 'Mosjøen', '09.14'),
+(3, 'Steinkjer', '12.31'),
+(3, 'Mo i Rana', '08.11'),
+(3, 'Trondheim', '14.13')
 ''')
 
 
@@ -251,48 +257,53 @@ def searchTogrute():
     dato_obj = datetime.strptime(dato, '%d.%m.%Y') # convert string to datetime object
     nesteDato_obj = dato_obj + timedelta(days=1) # add one day to the datetime object
     nesteDato = nesteDato_obj.strftime('%d.%m.%Y') # convert datetime object to string in required format
-    # tid = input('Oppgi et gyldig tidspunkt i format tt.mm (09.40): ')
-    # c.execute('''SELECT tr.ruteid, tr.startstasjon, tr.endestasjon, kt.dato 
-    # FROM togrute as tr 
-    # INNER JOIN kjørendetog as kt using (ruteID)''')
+    tid = input('Oppgi et gyldig tidspunkt i format tt.mm (09.40): ')
+    tid_mins = int(tid[:2]) * 60 + int(tid[3:])
 
     c.execute('''SELECT tr.ruteid, tr.startstasjon, tr.endestasjon, kt.dato ,tr.avgangstid, tr.ankomsttid 
     From togrute as tr INNER JOIN KjørendeTog as kt using (ruteID)
     WHERE tr.startstasjon = ? AND tr.endestasjon = ? AND (kt.dato = ? OR kt.dato = ?)''', (startStasjon, sluttStasjon, dato, nesteDato))
     bane = c.fetchall()
+    #Håndtere en banestrekning
     if (len(bane) > 0):
-        for row in bane:
+        print('----------------------------------------------------------------------------------------------------------------------------------------------')
+        print('\nSortert etter nærmest kl. ' + tid + ' går det følgende togruter for de oppgitte datoene.\n')
+        bane_sorted = sorted(bane, key=lambda x: abs(int(x[-2][:2]) * 60 + int(x[-2][3:]) - tid_mins))
+        for row in bane_sorted:
             print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 3):
-                print('\nDet går et morgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nMorgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 1):
-                print('\nDet går et dagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nDagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 2):
-                print('\nDet går et nattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nNattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
-    else:
-        c.execute('''SELECT tr.ruteid, ds.startstasjon, 
-    ds.endestasjon, kt.dato, ms.stasjonnavn, ms.ankomsttid, ms.avgangsstid 
-    FROM togrute as tr INNER JOIN delstrekning as ds USING (ruteID) INNER JOIN kjørendetog as kt USING (ruteID) INNER JOIN mellomstasjon as ms USING (ruteID)
-    WHERE (((ds.startstasjon = ?) AND (ds.endestasjon = ?)) AND ms.stasjonnavn = ?) AND (kt.dato = ? OR kt.dato = ?)''', (startStasjon, sluttStasjon, startStasjon, dato, nesteDato,))
-    
+    else: #Håndetere delstrekning
+        c.execute('''SELECT tr.ruteid, ds.startstasjon, ds.endestasjon, kt.dato, ak.stasjonnavn, ak.ankomsttid
+        FROM ((((togrute as tr INNER JOIN delstrekning as ds USING (ruteID)) INNER JOIN kjørendetog as kt USING (ruteID)) INNER JOIN ankommerstasjon as ak USING (ruteID))) 
+        WHERE (((ds.startstasjon = ?) AND (ds.endestasjon = ?)) AND ak.stasjonnavn = ?  AND (kt.dato = ? OR kt.dato = ?))''', (startStasjon, sluttStasjon, startStasjon, dato, nesteDato,))
+        
         rows = c.fetchall()
 
         if (len(rows) == 0):
             return print('Det går dessverre ingen tog fra ' + startStasjon + ' til ' + sluttStasjon + ' den oppgitte datoen.')
-    
-        for row in rows:
+        
+        print('----------------------------------------------------------------------------------------------------------------------------------------------')
+        print('\nSortert etter nærmest kl. ' + tid + ' går det følgende togruter for de oppgitte datoene.\n')
+
+        rows_sorted = sorted(rows, key=lambda x: abs(int(x[-1][:2]) * 60 + int(x[-1][3:]) - tid_mins))
+        for row in rows_sorted:
             print('----------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 3):
-                print('\nDet går et morgentog fra Mo i Rana til Trondheim ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nMorgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 1):
-                print('\nDet går et dagtog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nDagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1]  + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
             if (row[0] == 2):
-                print('\nDet går et nattog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('\nNattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
                 print('-------------------------------------------------------------------------------------------------------------------------------------------')
 
 searchTogrute()

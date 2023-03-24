@@ -190,11 +190,10 @@ CREATE TABLE IF NOT EXISTS Seter(
 );
 
 -- Lagt til ny tabell Mellomstasjon
-CREATE TABLE IF NOT EXISTS Mellomstasjon(
+CREATE TABLE IF NOT EXISTS AnkommerStasjon(
 	RuteID 	INTEGER NOT NULL,
 	StasjonNavn	VARCHAR(30),
 	Ankomsttid VARCHAR(30),
-	Avgangsstid	VARCHAR(30),
 	CONSTRAINT Mellomstasjon_PK PRIMARY KEY (RuteID, StasjonNavn, Ankomsttid )
 	CONSTRAINT Mellomstasjon_FK1 FOREIGN KEY (StasjonNavn) REFERENCES Jerbanestasjon(StasjonNavn)
 		ON UPDATE CASCADE
