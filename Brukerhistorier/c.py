@@ -1,52 +1,44 @@
 import sqlite3
-from datetime import datetime, timedelta
 con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
-def getTogruter(stasjon : str, ukedag : str):
+def getTogruter():
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
-    alledager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag','lørdag', 'søndag']
-    togruteID = set()
-    if((ukedag.lower() in hverdager) and ukedag.lower() in alledager):
-        
-        c.execute('''SELECT tr.RuteID, tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
-        FROM Togrute as tr 
-        INNER JOIN Delstrekning as ds 
-        ON ds.RuteID = tr.RuteID 
-        WHERE Ukedager = 'Hverdager' 
-        AND (tr.StartStasjon = ? OR tr.EndeStasjon = ? or ds.StartStasjon = ?  OR ds.EndeStasjon = ?)''', (stasjon,stasjon,stasjon,stasjon,))
-        
+    helg = ['lørdag', 'søndag']
+
+    stasjon = input('Oppgi en stasjon: ')
+    ukedag = input('Oppgi ukedagen du vil sjekke: ')
+
+    #Ukedager
+    if((ukedag.lower() in hverdager)):
+        c.execute('''SELECT tr.ruteID, tr.ukedager, tr.startstasjon, tr.endestasjon, 
+        ak.stasjonnavn ,ak.ankomsttid FROM togrute AS tr  INNER JOIN ankommerstasjon AS ak USING (ruteid)
+        WHERE ak.stasjonnavn = ? AND (tr.ukedager = 'Hverdager' OR tr.ukedager = 'Alle dager') ''', (stasjon,))
+
         rows = c.fetchall()
-        
+        print('-------------------------------------------------------------------------------------------------------------------------------------------')
         for row in rows:
-            togruteID.add(row[0])
+            if (row[0] == 3):
+                print('\nMorgentog fra Mo i Rana til Trondheim. \n\nAnkommer ' + stasjon + ' kl: '+ row[-1] + ' på ' + ukedag + '.\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 1):
+                print('\nDagtog fra Trondheim til Bodø  \n\nAnkommer ' + stasjon + ' kl: '+ row[-1] + ' på ' + ukedag + '.\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 2):
+                print('\nNattog fra Trondheim til Bodø  \n\nAnkommer ' + stasjon + ' kl: '+ row[-1] + ' på ' + ukedag + '.\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+           
+    #Helger
+    if ((ukedag.lower() in helg)):
+            c.execute('''SELECT tr.ruteID, tr.ukedager, tr.startstasjon, tr.endestasjon, 
+            ak.stasjonnavn ,ak.ankomsttid 
+            FROM togrute AS tr INNER JOIN ankommerstasjon AS ak USING (ruteid)
+            WHERE ak.stasjonnavn = ? AND tr.ukedager = 'Alle dager' ''', (stasjon,))
 
-    elif (ukedag.lower() in alledager):
-        c.execute('''SELECT tr.RuteID, tr.StartStasjon, tr.EndeStasjon, tr.Ukedager, ds.StartStasjon, ds.EndeStasjon 
-        FROM Togrute as tr 
-        INNER JOIN Delstrekning as ds 
-        ON ds.RuteID = tr.RuteID 
-        WHERE Ukedager = 'AlleDager' 
-        AND (tr.StartStasjon = ? OR tr.EndeStasjon = ? or ds.StartStasjon = ?  OR ds.EndeStasjon = ?)''', (stasjon,stasjon,stasjon,stasjon,))
-        rows = c.fetchall()
-        for row in rows:
-            togruteID.add(row[0])
+            rows = c.fetchall()
+            print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            for row in rows:
+                if (row[0] == 2):
+                    print('\nNattog fra Trondheim til Bodø  \n\nAnkommer ' + stasjon + ' kl: '+ row[-1] + ' på ' + ukedag + '.\n')
+                    print('-------------------------------------------------------------------------------------------------------------------------------------------')
 
-    output = ''
-
-    if (len(togruteID) == 0):
-            output += "Ingen togruter som passer til krav."
-    for togrute in togruteID:
-        if (togrute == 1):
-            output += "Trondheim-Bodø, Dagtog"
-        if (togrute == 2):
-            output += "\nTrondheim-Bodø, Nattog"
-        if (togrute == 3):
-            output += "\nMo i Rana-Trondheim, Dagtog"
-
-    print(output)
-
-# getTogruter('Mosjøen', 'Lørdag')
-
-con.commit()
-con.close()
