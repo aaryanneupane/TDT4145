@@ -1,5 +1,7 @@
 import sqlite3
+from datetime import datetime, timedelta
 con = sqlite3.connect("database.db")
+
 
 #Create cursor
 c = con.cursor()
@@ -9,7 +11,7 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
 ('Trondheim', 5.1),
 ('Steinkjer', 3.6),
 ('Mosjøen', 6.8),
-('MoIRana', 3.5),
+('Mo i Rana', 3.5),
 ('Fauske', 34.0),
 ('Bodø', 4.1)
 ''')
@@ -18,17 +20,37 @@ c.execute('''INSERT OR IGNORE INTO Jernbanestasjon VALUES
 c.execute('''INSERT OR IGNORE INTO Delstrekning VALUES 
 ('Trondheim-Steinkjer1', 1,'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
 ('Trondheim-Steinkjer2', 2, 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
-('Trondheim-Steinkjer3', 3, 'Nordlandsbanen', 120, 2, 'Trondheim', 'Steinkjer'),
+('Trondheim-Mosjøen1', 1,'Nordlandsbanen', 400, 2, 'Trondheim', 'Mosjøen'),
+('Trondheim-Mosjøen2', 2, 'Nordlandsbanen', 400, 2, 'Trondheim', 'Mosjøen'),
+('Trondheim-MoIRana1', 1,'Nordlandsbanen', 490, 2, 'Trondheim', 'Mo i Rana'),
+('Trondheim-MoIRana2', 2, 'Nordlandsbanen', 490, 2, 'Trondheim', 'Mo i Rana'),
+('Trondheim-Fauske1', 1,'Nordlandsbanen', 660, 2, 'Trondheim', 'Fauske'),
+('Trondheim-Fauske2', 2, 'Nordlandsbanen', 660, 2, 'Trondheim', 'Fauske'),
 ('Steinkjer-Mosjøen1', 1, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
 ('Steinkjer-Mosjøen2', 2, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
-('Steinkjer-Mosjøen3', 3, 'Nordlandsbanen', 280, 1, 'Steinkjer', 'Mosjøen'),
-('Mosjøen-MoIRana1', 1, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
-('Mosjøen-MoIRana2', 2, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
-('Mosjøen-MoIRana3', 3, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'MoIRana'),
-('MoIRana-Fauske1', 1, 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
-('MoIRana-Fauske2', 2, 'Nordlandsbanen', 170, 1, 'MoIRana', 'Fauske'),
+('Steinkjer-MoIRana1', 1, 'Nordlandsbanen', 370, 1, 'Steinkjer', 'Mo i Rana'),
+('Steinkjer-MoIRana2', 2, 'Nordlandsbanen', 370, 1, 'Steinkjer', 'Mo i Rana'),
+('Steinkjer-Fauske1', 1, 'Nordlandsbanen', 540, 1, 'Steinkjer', 'Fauske'),
+('Steinkjer-Fauske2', 2, 'Nordlandsbanen', 540, 1, 'Steinkjer', 'Fauske'),
+('Steinkjer-Bodø1', 1, 'Nordlandsbanen', 600, 1, 'Steinkjer', 'Bodø'),
+('Steinkjer-Bodø2', 2, 'Nordlandsbanen', 600, 1, 'Steinkjer', 'Bodø'),
+('Mosjøen-MoIRana1', 1, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'Mo i Rana'),
+('Mosjøen-MoIRana2', 2, 'Nordlandsbanen', 90, 1, 'Mosjøen', 'Mo i Rana'),
+('Mosjøen-Fauske1', 1, 'Nordlandsbanen', 260, 1, 'Mosjøen', 'Fauske'),
+('Mosjøen-Fauske2', 2, 'Nordlandsbanen', 260, 1, 'Mosjøen', 'Fauske'),
+('Mosjøen-Bodø1', 1, 'Nordlandsbanen', 320, 1, 'Mosjøen', 'Bodø'),
+('Mosjøen-Bodø2', 2, 'Nordlandsbanen', 320, 1, 'Mosjøen', 'Bodø'),
+('MoIRana-Fauske1', 1, 'Nordlandsbanen', 170, 1, 'Mo i Rana', 'Fauske'),
+('MoIRana-Fauske2', 2, 'Nordlandsbanen', 170, 1, 'Mo i Rana', 'Fauske'),
+('MoIRana-Bodø1', 1, 'Nordlandsbanen', 230, 1, 'Mo i Rana', 'Bodø'),
+('MoIRana-Bodø2', 2, 'Nordlandsbanen', 230, 1, 'Mo i Rana', 'Bodø'),
 ('Fauske-Bodø1', 1, 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø'),
-('Fauske-Bodø2', 2, 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø')
+('Fauske-Bodø2', 2, 'Nordlandsbanen', 60, 1, 'Fauske', 'Bodø'),
+('MoIRana-Mosjøen1', 3, 'Nordlandsbanen', 90, 1, 'Mo i Rana', 'Mosjøen'),
+('MoIRana-Steinkjer1', 3, 'Nordlandsbanen', 370, 1, 'Mo i Rana', 'Steinkjer'),
+('Mosjøen-Steinkjer1', 3, 'Nordlandsbanen', 280, 1, 'Mosjøen', 'Steinkjer'),
+('Mosjøen-Trondheim1', 3, 'Nordlandsbanen', 400, 1, 'Mosjøen', 'Trondheim'),
+('Steinkjer-Trondheim1', 3, 'Nordlandsbanen', 120, 1, 'Steinkjer', 'Trondheim')
 ''')
           
 #Banestrekning
@@ -43,9 +65,9 @@ c.execute('''INSERT OR IGNORE INTO Operatør VALUES
           
 #Togrute  
 c.execute('''INSERT OR IGNORE INTO Togrute VALUES 
-(1, 'True', 'Nordlandsbanen', 'SJ', 'Hverdager', 'Trondheim', 'Bodø'),
-(2, 'True', 'Nordlandsbanen', 'SJ', 'Alle dager', 'Trondheim', 'Bodø'),
-(3, 'False', 'Nordlandsbanen', 'SJ', 'Hverdager', 'MoIRana' , 'Trondheim')
+(1, 'True', 'Nordlandsbanen', 'SJ', 'Hverdager', 'Trondheim', 'Bodø', '07.49', '17.34'),
+(2, 'True', 'Nordlandsbanen', 'SJ', 'Alle dager', 'Trondheim', 'Bodø', '23.05', '09.05'),
+(3, 'False', 'Nordlandsbanen', 'SJ', 'Hverdager', 'Mo i Rana' , 'Trondheim', '08.11', '14.13')
 ''')
 
 #TogruteForekomst 
@@ -138,6 +160,21 @@ c.execute('''INSERT OR IGNORE INTO KjørendeTog VALUES
 (2, '04.04.2023'),
 (3, '04.04.2023')
 ''')
+          
+#Mellomstasjon
+c.execute('''INSERT OR IGNORE INTO Mellomstasjon VALUES 
+(1, 'Steinkjer', '09.51', '09.56'),
+(1, 'Mosjøen', '13.20', '13.25'),
+(1, 'MoIRana', '14.31', '14.36'),
+(1, 'Fauske', '16.49', '16.54'),
+(2, 'Steinkjer', '00.57', '01.02'),
+(2, 'Mosjøen', '04.41', '04.46'),
+(2, 'MoIRana', '05.55', '06.00'),
+(2, 'Fauske', '08.19', '08.24'),
+(3, 'Mosjøen', '09.14', '09.19'),
+(3, 'Steinkjer', '12.31', '12.36')
+''')
+
 
 def getTogruter(stasjon : str, ukedag : str):
     hverdager = ['mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag']
@@ -206,19 +243,60 @@ def addKunde():
     c.execute('''INSERT INTO Kunde (KundeNr, Navn, epost, tlf, passord)
     VALUES (?, ?, ?, ?, ?)''', (nyID, navn, epost, tlf, passord))
 
-# def searchTogrute():
-#     startStasjon = input('Oppgi en startsjon: ')
-#     sluttStasjon = input('Oppgi en endestasjon: ')
-#     dato = input('Oppgi en gyldig dato i format dd.mm.yyyy: ')
-#     tid = input('Oppgi et gyldig tidspunkt i format tt.mm (09.40): ')
 
+def searchTogrute():
+    startStasjon = input('Oppgi en startstasjon: ')
+    sluttStasjon = input('Oppgi en endestasjon: ')
+    dato = input('Oppgi en gyldig dato i format dd.mm.yyyy: ')
+    dato_obj = datetime.strptime(dato, '%d.%m.%Y') # convert string to datetime object
+    nesteDato_obj = dato_obj + timedelta(days=1) # add one day to the datetime object
+    nesteDato = nesteDato_obj.strftime('%d.%m.%Y') # convert datetime object to string in required format
+    # tid = input('Oppgi et gyldig tidspunkt i format tt.mm (09.40): ')
+    # c.execute('''SELECT tr.ruteid, tr.startstasjon, tr.endestasjon, kt.dato 
+    # FROM togrute as tr 
+    # INNER JOIN kjørendetog as kt using (ruteID)''')
 
-# searchTogrute()
+    c.execute('''SELECT tr.ruteid, tr.startstasjon, tr.endestasjon, kt.dato ,tr.avgangstid, tr.ankomsttid 
+    From togrute as tr INNER JOIN KjørendeTog as kt using (ruteID)
+    WHERE tr.startstasjon = ? AND tr.endestasjon = ? AND (kt.dato = ? OR kt.dato = ?)''', (startStasjon, sluttStasjon, dato, nesteDato))
+    bane = c.fetchall()
+    if (len(bane) > 0):
+        for row in bane:
+            print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 3):
+                print('\nDet går et morgentog fra Mo i Rana til Trondheim på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 1):
+                print('\nDet går et dagtog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 2):
+                print('\nDet går et nattog fra Trondheim til Bodø på datoen ' + row[-3] + ' \n\nAvgang ' + startStasjon + ' kl: '+ row[-2] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+    else:
+        c.execute('''SELECT tr.ruteid, ds.startstasjon, 
+    ds.endestasjon, kt.dato, ms.stasjonnavn, ms.ankomsttid, ms.avgangsstid 
+    FROM togrute as tr INNER JOIN delstrekning as ds USING (ruteID) INNER JOIN kjørendetog as kt USING (ruteID) INNER JOIN mellomstasjon as ms USING (ruteID)
+    WHERE (((ds.startstasjon = ?) AND (ds.endestasjon = ?)) AND ms.stasjonnavn = ?) AND (kt.dato = ? OR kt.dato = ?)''', (startStasjon, sluttStasjon, startStasjon, dato, nesteDato,))
+    
+        rows = c.fetchall()
 
-#GROV SPØRRING
-#sqlite> SELECT togrute.ruteid, ukedager, togrute.startstasjon,togrute.endestasjon, 
-# delstrekning.startstasjon, delstrekning.endestasjon, kjørendetog.dato 
-# FROM (togrute  inner join delstrekning using (ruteID)) inner join kjørendetog(ruteID)
+        if (len(rows) == 0):
+            return print('Det går dessverre ingen tog fra ' + startStasjon + ' til ' + sluttStasjon + ' den oppgitte datoen.')
+    
+        for row in rows:
+            print('----------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 3):
+                print('\nDet går et morgentog fra Mo i Rana til Trondheim ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 1):
+                print('\nDet går et dagtog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+            if (row[0] == 2):
+                print('\nDet går et nattog fra Trondheim til Bodø på datoen ' + row[-4] + ' \n\nAnkomst ' + startStasjon + ' kl: '+ row[-2] + '\nAvgang ' + startStasjon + ' kl: '+ row[-1] + ' \n\nAnkomst ' + sluttStasjon + ' kl: '+ row[-1] + '\n')
+                print('-------------------------------------------------------------------------------------------------------------------------------------------')
+
+searchTogrute()
+
 
 
 con.commit()
