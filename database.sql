@@ -186,7 +186,20 @@ CREATE TABLE IF NOT EXISTS Seter(
 		ON DELETE CASCADE
 );
 
-
+-- Lagt til ny tabell Mellomstasjon
+CREATE TABLE IF NOT EXISTS Mellomstasjon(
+	StasjonNavn	VARCHAR(30),
+	RuteID 	INTEGER NOT NULL,
+	Ankomsttid VARCHAR(30),
+	Avgangsstid	VARCHAR(30),
+	CONSTRAINT Mellomstasjon_PK PRIMARY KEY (StasjonNavn, Ankomsttid, RuteID)
+	CONSTRAINT Mellomstasjon_FK1 FOREIGN KEY (StasjonNavn) REFERENCES Jerbanestasjon(StasjonNavn)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	CONSTRAINT Mellomstasjon_FK2 FOREIGN KEY (RuteID) REFERENCES Togrute(RuteID)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE
+);
 
 
 
