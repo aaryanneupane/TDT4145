@@ -1,3 +1,3 @@
-from interface import menu
+from interface import main
 
-menu()
+main()

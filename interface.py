@@ -5,12 +5,9 @@ from Brukerhistorier.e import addKunde, login
 con = sqlite3.connect("./Database/database.db")
 
 #Innlogget meny
-def menu2(name : str):
+def menu(name : str):
     navn = name
-    print('\n-------------------------------------------------------------------------------------------------------------------------------------------')
-    print('Innlogging vellykket')
-    print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
-    print('Velkommen, ' + name + '!\n')
+    print('\nVelkommen, ' + name + '!\n')
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
     print('Tast [1] for å få ut alle togruter som er innom en stasjon en gitt ukedag')
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
@@ -29,16 +26,16 @@ def menu2(name : str):
             return
     if(svar == '1'):
         getTogruter()
-        menu2(navn)
+        menu(navn)
     if(svar == '2'):
         searchTogrute()
-        menu2(navn)
+        menu(navn)
     if(svar == '3'):
         print('Må lage denne')
-        menu2(navn)
+        menu(navn)
    
-#Default meny
-def menu():
+#Default main
+def main():
     print('\n-------------------------------------------------------------------------------------------------------------------------------------------\n')
     print('Velkommen til Vy\n')
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
@@ -61,21 +58,24 @@ def menu():
             return
     if(svar == '1'):
         name = addKunde()
-        menu2(name)
+        menu(name)
     if(svar == '2'):
         name = login()
         if (name == 'Nope'):
-            menu()
-        menu2(name)   
+            main()
+        print('\n-------------------------------------------------------------------------------------------------------------------------------------------')
+        print('Innlogging vellykket')
+        print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
+        menu(name)   
     if(svar == '3'):
         getTogruter()
-        menu()
+        main()
     if(svar == '4'):
         searchTogrute()
-        menu()
+        main()
     if(svar == '5'):
         print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
         print('Du må være en innlogget bruker for å søke etter ledige billetter!')
-        menu()
+        main()
 
 con.close()
