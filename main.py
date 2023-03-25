@@ -1,4 +1,3 @@
-import sqlite3
-con = sqlite3.connect("./Database/database.db")
+from interface import main
 
-con.close()
+main()
