@@ -11,7 +11,7 @@ def addKunde():
 
 #Passord verifikasjon
     while (bekreftPassord != passord):
-        bekreftPassord = input('''(Tast 1 om du vil skrive passord på nytt) Passordene samsvarer ikke, vennligst tast inn samme passord: ''')
+        bekreftPassord = input('''(Tast 1 om du vil skrive passord på nytt)\nPassordene samsvarer ikke, vennligst tast inn samme passord: ''')
         if (bekreftPassord == '1'):
             passord = input('Oppgi nytt passord: ')
             bekreftPassord = input('Bekreft passord: ')
@@ -29,7 +29,7 @@ def addKunde():
     
 #Commit til databasen før funksjon slutt
     con.commit()
-    return navn
+    return [navn, epost, passord]
 
 
 def login():

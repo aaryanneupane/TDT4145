@@ -2,10 +2,11 @@ import sqlite3
 from Brukerhistorier.d import searchTogrute
 from Brukerhistorier.c import getTogruter
 from Brukerhistorier.e import addKunde, login
+from Brukerhistorier.g import findBillett
 con = sqlite3.connect("./Database/database.db")
 
 #Innlogget meny
-def menu(name : str):
+def menu(name : str, epost : str, passord : str):
     navn = name
     print('\nVelkommen, ' + name + '!\n')
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
@@ -26,13 +27,13 @@ def menu(name : str):
             return
     if(svar == '1'):
         getTogruter()
-        menu(navn)
+        menu(navn, epost, passord)
     if(svar == '2'):
         searchTogrute()
-        menu(navn)
+        menu(navn, epost, passord)
     if(svar == '3'):
-        print('Må lage denne')
-        menu(navn)
+        findBillett(epost, passord)
+        menu(navn, epost, passord)
    
 #Default main
 def main():
@@ -57,8 +58,8 @@ def main():
     if(svar == '0'):
             return
     if(svar == '1'):
-        name = addKunde()
-        menu(name)
+        infoArray = addKunde()
+        menu(infoArray[0], infoArray[1], infoArray[2])
     if(svar == '2'):
         name = login()
         if (name == 'Nope'):
