@@ -38,7 +38,7 @@ def login():
     notExist = 'Nope'
     
     c.execute('''SELECT epost, passord, navn from Kunde WHERE epost = ? AND passord = ?''', (epost,passord))
-    rows = c.fetchall()
+    rows = c.fetchone()
 
 
     if (len(rows) == 0):
@@ -46,4 +46,4 @@ def login():
         print('Denne brukeren finnes ikke.')
         return notExist
     
-    return rows[0][-1]
+    return [rows[-1], rows[0], rows[1] ]

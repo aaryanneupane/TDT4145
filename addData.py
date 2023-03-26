@@ -136,7 +136,7 @@ c.execute('''INSERT OR IGNORE INTO Sovekupe VALUES
           
 #Plass 
 c.execute('''INSERT OR IGNORE INTO Plass VALUES 
-(1, 1, 0),
+(1, 1, 1),
 (1, 2, 0),
 (1, 3, 0),
 (1, 4, 0),

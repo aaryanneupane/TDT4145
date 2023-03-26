@@ -3,17 +3,24 @@ from datetime import datetime
 con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
+
+# #Denne funksjonen skal kunne dele rute i delstrekninger
+# def delRute(ruteid : str, startStasjon : str, sluttStasjon : str):
+
+
+
+
 #Denne funksjonen skal håndtere billett kjøp
 def kjøpBillett(togrute: str, startStasjon: str, sluttStasjon: str, dato: str, vognNr : str, sete : str, epost : str, passord : str):
     c.execute('''SELECT ordrenr FROM kundeordre''')
     kundeOrdre = c.fetchall()
     nyID = len(kundeOrdre) + 1
-    dagensDato = datetime.now().strftime('%H.%M')
-    dagensTid = datetime.now().strftime('%d.%m.%Y')
+    dagensTid = datetime.now().strftime('%H.%M')
+    dagensDato = datetime.now().strftime('%d.%m.%Y')
 
     #Hente kundeinfo
-    c.execute('''SELECT kundenr FROM kunde WHERE epost ? = AND passord = ?''', (epost, passord))
-    kundeNr = c.fetchone()[0][0]
+    c.execute('''SELECT kundenr FROM kunde WHERE epost = ?  AND passord = ?''', (epost, passord))
+    kundeNr = c.fetchone()[0]
     #Lage en kundeOrdre
     c.execute('''
     INSERT INTO kundeordre 
@@ -24,8 +31,21 @@ def kjøpBillett(togrute: str, startStasjon: str, sluttStasjon: str, dato: str, 
     nyttBillettID = len(totaltBilletter) + 1
     c.execute('''
     INSERT INTO billett 
-    VALUES (?, ?, ?, ?, ?)''', (nyttBillettID, nyID, vognNr, kundeNr, sete))
+    VALUES (?, ?, ?, ?)''', (nyttBillettID, nyID, vognNr, sete))
+    #Gjøre billetten kjøpt utilgjengelig
+    c.execute('''
+    UPDATE plass
+    SET ledig = '1' 
+    WHERE vognnr = ? AND plassnr = ?
+    ''', (vognNr, sete))
     
+    print('\n-------------------------------------------------------------------------------------------------------------------------------------------')
+    print('Billett kjøp velykket!')
+    print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
+
+    #Comitte til databasen
+    con.commit()
+
 
     #Update plassen til opptatt
 
@@ -82,3 +102,4 @@ def findBillett(epost : str, passord : str):
 
 
 
+kjøpBillett('1', 'Trondheim', 'Fauske', '04.04.2023', '1', '3','aaryan@gmail.com', '1234')

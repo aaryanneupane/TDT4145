@@ -3,6 +3,7 @@ from Brukerhistorier.d import searchTogrute
 from Brukerhistorier.c import getTogruter
 from Brukerhistorier.e import addKunde, login
 from Brukerhistorier.g import findBillett
+from Brukerhistorier.h import mineBilletter
 con = sqlite3.connect("./Database/database.db")
 
 #Innlogget meny
@@ -16,11 +17,13 @@ def menu(name : str, epost : str, passord : str):
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
     print('Tast [3] å søke etter ledige billetter for en oppgitt strekning')
     print('-------------------------------------------------------------------------------------------------------------------------------------------')
+    print('Tast [4] for å se dine bestillinger')
+    print('-------------------------------------------------------------------------------------------------------------------------------------------')
     print('Tast [0] for å \u0332a\u0332v\u0332s\u0332l\u0332u\u0332t\u0332t\u0332e\u0332') #Underline avslutte
     print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
     
     svar = input('Velg et av alternativene: ')
-    while(svar not in ['0','1', '2', '3',]):
+    while(svar not in ['0','1', '2', '3', '4']):
         svar = input('Du må velge et av alternativene overfor: ')
 
     if(svar == '0'):
@@ -34,6 +37,9 @@ def menu(name : str, epost : str, passord : str):
     if(svar == '3'):
         findBillett(epost, passord)
         menu(navn, epost, passord)
+    if(svar == '4'):
+         mineBilletter(epost, passord)
+         menu(navn, epost, passord)
    
 #Default main
 def main():
@@ -61,13 +67,13 @@ def main():
         infoArray = addKunde()
         menu(infoArray[0], infoArray[1], infoArray[2])
     if(svar == '2'):
-        name = login()
-        if (name == 'Nope'):
+        infoArray = login()
+        if (infoArray[0] == 'Nope'):
             main()
         print('\n-------------------------------------------------------------------------------------------------------------------------------------------')
         print('Innlogging vellykket')
         print('-------------------------------------------------------------------------------------------------------------------------------------------\n')
-        menu(name)   
+        menu(infoArray[0], infoArray[1], infoArray[2])   
     if(svar == '3'):
         getTogruter()
         main()
