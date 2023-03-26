@@ -4,9 +4,28 @@ con = sqlite3.connect("./Database/database.db")
 c = con.cursor()
 
 
-# #Denne funksjonen skal kunne dele rute i delstrekninger
-# def delRute(ruteid : str, startStasjon : str, sluttStasjon : str):
+#Denne funksjonen skal kunne dele rute i delstrekninger
+def delRute(ruteid : str, startStasjon : str, sluttStasjon : str):
 
+    ruteEnde = {1: 'Bodø', 2: 'Bodø', 3: 'Trondheim'}
+    ruteStart = {1: 'Trondheim', 2: 'Trondheim', 3: 'Mo i Rana'}
+
+    stasjoner = ['Trondheim', 'Steinkjer', 'Mosjøen', 'Mo i Rana', 'Fauske', 'Bodø']
+    stasjoner3 = ['Mo i Rana', 'Steinkjer', 'Mosjøen', 'Trondheim']
+
+    c.execute('''SELECT ds.ruteid, ds.startstasjon, ds.endestasjon, ak.stasjonnavn, tr.endestasjon  
+    FROM delstrekning AS ds
+    INNER JOIN ankommerstasjon AS ak using (ruteid) 
+    INNER JOIN togrute AS tr
+    WHERE ds.ruteid = ? AND ds.startstasjon = ? AND ds.endestasjon = ? AND NOT tr.endestasjon = ? AND NOT ak.stasjonnavn = ? AND NOT ak.stasjonnavn = ? AND NOT ak.stasjonnavn = ? AND NOT ak.stasjonnavn = ?''', (ruteid, startStasjon, sluttStasjon, ruteEnde[int(ruteid)], startStasjon, sluttStasjon, ruteEnde[int(ruteid)], ruteStart[int(ruteid)]))
+    # c.execute('''SELECT )
+    rows = c.fetchall()
+    print(rows)
+    mellomStasjoner = set()
+
+    for row in rows:
+        mellomStasjoner.add(row[-2])
+    return mellomStasjoner
 
 
 
@@ -21,6 +40,11 @@ def kjøpBillett(togrute: str, startStasjon: str, sluttStasjon: str, dato: str, 
     #Hente kundeinfo
     c.execute('''SELECT kundenr FROM kunde WHERE epost = ?  AND passord = ?''', (epost, passord))
     kundeNr = c.fetchone()[0]
+
+    # mellomstasjoner = delRute(togrute, startStasjon, sluttStasjon)
+    # if (len(mellomstasjoner) == 0): 
+    #HOLDT PÅ Å LAGE DENNE FOR FUNKSJON MEN RAKK DET IKKE
+
     #Lage en kundeOrdre
     c.execute('''
     INSERT INTO kundeordre 
@@ -32,12 +56,6 @@ def kjøpBillett(togrute: str, startStasjon: str, sluttStasjon: str, dato: str, 
     c.execute('''
     INSERT INTO billett 
     VALUES (?, ?, ?, ?)''', (nyttBillettID, nyID, vognNr, sete))
-    #Gjøre billetten kjøpt utilgjengelig
-    c.execute('''
-    UPDATE plass
-    SET ledig = '1' 
-    WHERE vognnr = ? AND plassnr = ?
-    ''', (vognNr, sete))
     
     print('\n-------------------------------------------------------------------------------------------------------------------------------------------')
     print('Billett kjøp velykket!')
@@ -53,7 +71,7 @@ def kjøpBillett(togrute: str, startStasjon: str, sluttStasjon: str, dato: str, 
 # #Denne funksjonen er ganske lik brukerhistorie d) men hensikten her er å finne hvilken reise kunden har lyst på.
 def ledigeBilletter(togrute: str, startStasjon: str, sluttStasjon: str, dato : str, epost : str, passord : str):
     c.execute('''
-        SELECT ruteid, vognnr, startstasjon, endestasjon, dato, plassnr, ledig 
+        SELECT ruteid, vognnr, startstasjon, endestasjon, dato, plassnr
         FROM harvogner 
         NATURAL JOIN vogn 
         NATURAL JOIN kjørendetog 
@@ -61,23 +79,48 @@ def ledigeBilletter(togrute: str, startStasjon: str, sluttStasjon: str, dato : s
         NATURAL JOIN delstrekning 
         WHERE ruteid = ? AND dato = ? AND startstasjon = ? AND endestasjon = ?''', 
         (togrute, dato, startStasjon, sluttStasjon))
-
     rows = c.fetchall()
     if len(rows) == 0:
         print('----------------------------------------------------------------------------------------------------------------------------------------------\n')
         return print('Det er dessverre ingen ledige billetter.\n\n----------------------------------------------------------------------------------------------------------------------------------------------')
     print('----------------------------------------------------------------------------------------------------------------------------------------------\n')
     
+    vognTilRute = []
+    if(togrute == '1'):
+        vognTilRute = ['1', '2']
+    if(togrute == '2'):
+        vognTilRute = ['3', '4']
+    if(togrute == '3'):
+        vognTilRute = ['5']
+    
+    for row in vognTilRute:
+        print('Du kan velge mellom følgende vogn: ' +  row)
+    
+    print('----------------------------------------------------------------------------------------------------------------------------------------------\n')
+    
+    vognNr = input('Velg ønsket vogn: ')
+
+    c.execute('''SELECT ruteid, frastasjon, tilstasjon, kjørendetog.dato, plassnr, vognnr
+    FROM billett
+    NATURAL JOIN kundeordre
+    NATURAL JOIN harvogner
+    INNER JOIN kjørendetog USING (ruteid)
+    WHERE frastasjon = ? AND tilstasjon = ? AND kjørendetog.dato = ? AND vognnr = ? ''', (startStasjon, sluttStasjon, dato, vognNr))
+
+    billeter = c.fetchall()
+
     ledigePlasser = []
-    for row in rows: #Mappe ledige plasser vil nå ha en oversikt over ledige plasser i hver vogn
-        if row[-1] == 0:
-            ledigePlasser.append(['Vogn nr: ' + str(row[1]), 'Sete nr: '+ str(row[-2])])
+
+    for row in rows:
+        for billett in billeter:
+            if (row[-1] != billett[-2]):
+                ledigePlasser.append(['Sete nr: '+ str(row[-1])])
+
     print('----------------------------------------------------------------------------------------------------------------------------------------------\n')
     print('Følgende plasser er ledig for reisen fra ' + startStasjon + ' til ' + sluttStasjon + '\n')
     print('----------------------------------------------------------------------------------------------------------------------------------------------\n')
     print(ledigePlasser)
     print('----------------------------------------------------------------------------------------------------------------------------------------------')
-    vognNr = input('Velg ønsket vogn: ')
     seteNr = input('Velg ønsket sete: ')
     kjøpBillett(togrute, startStasjon, sluttStasjon, dato, vognNr, seteNr, epost, passord)
 
@@ -101,5 +144,3 @@ def findBillett(epost : str, passord : str):
     ledigeBilletter(togrute, startStasjon, sluttStasjon, dato, epost, passord)
 
 
-
-kjøpBillett('1', 'Trondheim', 'Fauske', '04.04.2023', '1', '3','aaryan@gmail.com', '1234')
